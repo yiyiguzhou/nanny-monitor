@@ -1,8 +1,5 @@
 package com.example.nanny.controller;
 
-import com.example.nanny.domain.AlertRecord;
-import com.example.nanny.domain.Camera;
-import com.example.nanny.domain.DetectionRecord;
 import com.example.nanny.repository.AlertRecordRepository;
 import com.example.nanny.repository.DetectionRecordRepository;
 import com.example.nanny.service.CameraService;

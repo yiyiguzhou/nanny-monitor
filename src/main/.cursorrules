@@ -1,0 +1,25 @@
+# 项目全局规范 SpringBoot3 + SpringAI
+## 技术栈固定
+JDK17、SpringBoot3.3、SpringAI 1.0.x、Maven、Anthropic Claude 模型
+依赖: spring-ai-starter-model-anthropic、lombok、validation、mybatis-plus、swagger3
+
+## 分层架构强制
+1. Controller: 仅接收参数、@Valid校验、调用Service、统一返回Result<T>，禁止业务逻辑
+2. Service: 接口IXXXService + 实现XXXService,事务注解仅加在业务修改方法
+3. Mapper/Repository: 数据库操作，禁止复杂业务
+4. DTO/VO: 请求/出参,带Jakarta校验注解;Entity对应数据库表
+5. AI模块统一放 ai/ 包: ChatClient配置、PromptTemplate、工具调用Tool、向量库逻辑
+
+## SpringAI 编码规则
+1. ChatClient 使用 fluent 流式构建,统一注入Bean,不重复new
+2. 提示词全部抽离 PromptTemplate,存入 resources/prompts/xxx.st
+3. 模型参数(temperature、maxTokens)统一配置在application.yml,不硬编码
+4. 工具调用 @Tool 注解统一封装,抽取独立ToolService
+5. 所有AI接口捕获 AiException,全局异常处理器统一拦截
+
+## 通用代码规范
+- 日志使用 org.slf4j.Logger,禁止System.out
+- 空判断用 Optional,禁止链式裸调用 user.getOrder().getAddr()
+- 事务@Transactional只读查询标注readOnly=true
+- 所有接口添加OpenAPI注解,区分/v1/ai 大模型接口
+- 禁止AI生成不存在的Service/Mapper,不确定先标注待确认

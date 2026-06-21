@@ -1,6 +1,5 @@
 package com.example.nanny.alert;
 
-import com.example.nanny.domain.AlertRecord;
 import com.example.nanny.repository.AlertRecordRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

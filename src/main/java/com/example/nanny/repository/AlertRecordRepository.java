@@ -1,6 +1,5 @@
 package com.example.nanny.repository;
 
-import com.example.nanny.domain.AlertRecord;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 

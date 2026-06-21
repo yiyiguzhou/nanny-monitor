@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.nanny.mapper.DetectionRecordMapper">
+
+    <resultMap id="BaseResultMap" type="com.example.nanny.domain.DetectionRecord">
+            <id property="id" column="id" />
+            <result property="cameraId" column="camera_id" />
+            <result property="feeding" column="feeding" />
+            <result property="babyPresent" column="baby_present" />
+            <result property="caregiverPresent" column="caregiver_present" />
+            <result property="abnormal" column="abnormal" />
+            <result property="confidence" column="confidence" />
+            <result property="description" column="description" />
+            <result property="detectedAt" column="detected_at" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,camera_id,feeding,baby_present,caregiver_present,abnormal,
+        confidence,description,detected_at
+    </sql>
+</mapper>

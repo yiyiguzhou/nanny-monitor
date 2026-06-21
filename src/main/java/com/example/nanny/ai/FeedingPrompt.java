@@ -1,6 +1,14 @@
 package com.example.nanny.ai;
 
-/** 通义千问-VL 提示词：强制模型只输出 JSON，不含任何额外文本。 */
+import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.ai.model.Media;
+import org.springframework.util.MimeTypeUtils;
+
+import java.util.function.Consumer;
+
+/**
+ * Feeding detection prompt for Spring AI ChatClient.
+ */
 public final class FeedingPrompt {
 
     private FeedingPrompt() {}
@@ -19,4 +27,15 @@ public final class FeedingPrompt {
             - confidence: 你对 feeding 判断的置信度（0.0~1.0）
             - description: 10~30 字的简要中文描述
             """;
+
+    /**
+     * Build a Consumer for ChatClient.user() that includes both text instruction and JPEG image.
+     */
+    public static Consumer<ChatClient.PromptUserSpec> userSpec(byte[] jpegBytes) {
+        Media media = Media.builder()
+            .data(jpegBytes)
+            .mimeType(MimeTypeUtils.IMAGE_JPEG)
+            .build();
+        return spec -> spec.text(INSTRUCTION).media(media);
+    }
 }
