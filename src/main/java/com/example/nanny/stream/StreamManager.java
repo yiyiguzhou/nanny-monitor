@@ -18,23 +18,33 @@ public class StreamManager {
     private final DetectionPipeline detectionPipeline;
     private final Executor streamExecutor;
     private final int intervalSeconds;
+    private final int bufferMaxFrames;
+    private final int bufferMaxAgeSeconds;
     private final Map<String, FrameGrabberTask> tasks = new ConcurrentHashMap<>();
+    private final Map<String, FrameRingBuffer> buffers = new ConcurrentHashMap<>();
 
     public StreamManager(DetectionPipeline detectionPipeline,
                          @Qualifier("streamExecutor") Executor streamExecutor,
-                         @Value("${nanny.frame.interval-seconds:5}") int intervalSeconds) {
+                         @Value("${nanny.frame.interval-seconds:5}") int intervalSeconds,
+                         @Value("${nanny.clip.buffer-max-frames:450}") int bufferMaxFrames,
+                         @Value("${nanny.clip.buffer-max-age-seconds:30}") int bufferMaxAgeSeconds) {
         this.detectionPipeline = detectionPipeline;
         this.streamExecutor = streamExecutor;
         this.intervalSeconds = intervalSeconds;
+        this.bufferMaxFrames = bufferMaxFrames;
+        this.bufferMaxAgeSeconds = bufferMaxAgeSeconds;
     }
 
     public synchronized void start(String cameraId, String streamUrl) {
         stop(cameraId);
+        FrameRingBuffer buffer = new FrameRingBuffer(bufferMaxFrames, bufferMaxAgeSeconds * 1000L);
+        buffers.put(cameraId, buffer);
         FrameGrabberTask task = new FrameGrabberTask(
             cameraId,
             streamUrl,
             intervalSeconds,
-            frame -> detectionPipeline.process(cameraId, frame)
+            frame -> detectionPipeline.process(cameraId, frame),
+            buffer
         );
         tasks.put(cameraId, task);
         streamExecutor.execute(task);
@@ -47,6 +57,11 @@ public class StreamManager {
             old.stop();
             log.info("Stream task stopping. cameraId={}", cameraId);
         }
+        buffers.remove(cameraId);
+    }
+
+    public FrameRingBuffer getRingBuffer(String cameraId) {
+        return buffers.get(cameraId);
     }
 
     public boolean isRunning(String cameraId) {

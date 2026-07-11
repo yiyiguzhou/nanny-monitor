@@ -1,21 +1,15 @@
 package com.example.nanny.domain;
 
 import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import java.io.Serializable;
 import java.util.Date;
 
-/**
- * 
- * @TableName detection_record
- */
-@TableName(value ="detection_record")
-public class DetectionRecord {
-    /**
-     * 
-     */
-    @TableId(type = IdType.AUTO)
+@TableName("detection_record")
+public class DetectionRecord implements Serializable {
+    private static final long serialVersionUID = 1L;
+    @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
     /**
@@ -57,6 +51,20 @@ public class DetectionRecord {
      * 
      */
     private Date detectedAt;
+
+    public DetectionRecord() {
+    }
+
+    public DetectionRecord(String cameraId, boolean feeding, boolean babyPresent, boolean caregiverPresent, boolean abnormal, double confidence, String description) {
+        this.cameraId = cameraId;
+        this.feeding = feeding ? 1 : 0;
+        this.babyPresent = babyPresent ? 1 : 0;
+        this.caregiverPresent = caregiverPresent ? 1 : 0;
+        this.abnormal = abnormal ? 1 : 0;
+        this.confidence = confidence;
+        this.description = description;
+        this.detectedAt = new Date();
+    }
 
     /**
      * 

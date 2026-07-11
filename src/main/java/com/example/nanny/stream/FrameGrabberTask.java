@@ -18,13 +18,16 @@ public class FrameGrabberTask implements Runnable {
     private final String streamUrl;
     private final int intervalSeconds;
     private final Consumer<byte[]> onFrame;
+    private final FrameRingBuffer ringBuffer;
     private volatile boolean running = true;
 
-    public FrameGrabberTask(String cameraId, String streamUrl, int intervalSeconds, Consumer<byte[]> onFrame) {
+    public FrameGrabberTask(String cameraId, String streamUrl, int intervalSeconds,
+                            Consumer<byte[]> onFrame, FrameRingBuffer ringBuffer) {
         this.cameraId = cameraId;
         this.streamUrl = streamUrl;
         this.intervalSeconds = intervalSeconds;
         this.onFrame = onFrame;
+        this.ringBuffer = ringBuffer;
     }
 
     @Override
@@ -56,15 +59,20 @@ public class FrameGrabberTask implements Runnable {
                     continue;
                 }
 
-                long now = System.currentTimeMillis();
-                if (now - lastCaptureAt < intervalSeconds * 1000L) {
+                BufferedImage image = converter.convert(frame);
+                if (image == null) {
                     continue;
                 }
-                lastCaptureAt = now;
+                byte[] jpeg = toJpeg(image);
+                long now = System.currentTimeMillis();
 
-                BufferedImage image = converter.convert(frame);
-                if (image != null) {
-                    onFrame.accept(toJpeg(image));
+                // Always buffer for potential clip saving
+                ringBuffer.add(jpeg, now);
+
+                // Send to detection pipeline at configured interval
+                if (now - lastCaptureAt >= intervalSeconds * 1000L) {
+                    lastCaptureAt = now;
+                    onFrame.accept(jpeg);
                 }
             }
         }
