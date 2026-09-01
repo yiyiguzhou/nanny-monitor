@@ -280,6 +280,11 @@ STOMP endpoint：`/ws`
 | `alert_record` | 告警记录 |
 | `video_clip` | 异常告警视频片段（MP4 LONGBLOB） |
 
+## 架构文档
+
+- [技术架构图](docs/architecture.md) — 系统分层、数据流、部署、模块依赖、技术栈
+- [业务架构图](docs/business-architecture.md) — 业务全景、角色权限、订阅流程、监控流程、ER 图
+
 ## 隐私建议
 
 - 所有外部 VLM 请求走 HTTPS。

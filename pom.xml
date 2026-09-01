@@ -7,7 +7,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.3.0</version>
+        <version>3.2.5</version>
     </parent>
 
     <groupId>com.example</groupId>
@@ -19,7 +19,7 @@
         <java.version>17</java.version>
         <javacv.version>1.5.10</javacv.version>
         <spring-ai.version>1.0.0-M6</spring-ai.version>
-        <dubbo.version>3.3.0</dubbo.version>
+        <dubbo.version>3.3.3</dubbo.version>
     </properties>
 
     <dependencyManagement>
@@ -42,10 +42,6 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-websocket</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
         <dependency>
             <groupId>com.mysql</groupId>
@@ -75,8 +71,8 @@
         </dependency>
         <dependency>
             <groupId>com.baomidou</groupId>
-            <artifactId>mybatis-plus-boot-starter</artifactId>
-            <version>3.5.3.1</version>
+            <artifactId>mybatis-plus-spring-boot3-starter</artifactId>
+            <version>3.5.10.1</version>
         </dependency>
         <!-- Apache Dubbo -->
         <dependency>
@@ -113,11 +109,11 @@
             <version>0.12.5</version>
             <scope>runtime</scope>
         </dependency>
-        <!-- 微信支付 APIv3 -->
+        <!-- 微信支付 APIv3 (官方 Java SDK) -->
         <dependency>
             <groupId>com.github.wechatpay-apiv3</groupId>
-            <artifactId>wechatpay-apache-httpclient</artifactId>
-            <version>0.4.8</version>
+            <artifactId>wechatpay-java</artifactId>
+            <version>0.2.17</version>
         </dependency>
         <!-- 支付宝 SDK -->
         <dependency>
